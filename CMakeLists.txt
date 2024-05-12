@@ -3,7 +3,7 @@ project(lua53)
 
 add_subdirectory(Lua-Source)
 
-install(TARGETS lua
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
+install(TARGETS lua lua53
+    RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/out/bin
+    LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/out/lib
 )
