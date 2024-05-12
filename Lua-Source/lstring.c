@@ -33,8 +33,7 @@
 /*
 ** equality for long strings
 */
-int
-luaS_eqlngstr(TString* a, TString* b)
+int luaS_eqlngstr(TString* a, TString* b)
 {
     size_t len = a->u.lnglen;
     lua_assert(a->tt == LUA_TLNGSTR && b->tt == LUA_TLNGSTR);
@@ -44,8 +43,7 @@ luaS_eqlngstr(TString* a, TString* b)
 }
 
 
-unsigned int
-luaS_hash(const char* str, size_t l, unsigned int seed)
+unsigned int luaS_hash(const char* str, size_t l, unsigned int seed)
 {
     unsigned int h = seed ^ cast(unsigned int, l);
     size_t step    = (l >> LUAI_HASHLIMIT) + 1;
@@ -54,8 +52,7 @@ luaS_hash(const char* str, size_t l, unsigned int seed)
 }
 
 
-unsigned int
-luaS_hashlongstr(TString* ts)
+unsigned int luaS_hashlongstr(TString* ts)
 {
     lua_assert(ts->tt == LUA_TLNGSTR);
     if (ts->extra == 0) { /* no hash? */
@@ -69,8 +66,7 @@ luaS_hashlongstr(TString* ts)
 /*
 ** resizes the string table
 */
-void
-luaS_resize(lua_State* L, int newsize)
+void luaS_resize(lua_State* L, int newsize)
 {
     int i;
     stringtable* tb = &G(L)->strt;
@@ -102,8 +98,7 @@ luaS_resize(lua_State* L, int newsize)
 ** Clear API string cache. (Entries cannot be empty, so fill them with
 ** a non-collectable string.)
 */
-void
-luaS_clearcache(global_State* g)
+void luaS_clearcache(global_State* g)
 {
     int i, j;
     for (i = 0; i < STRCACHE_N; i++)
@@ -117,8 +112,7 @@ luaS_clearcache(global_State* g)
 /*
 ** Initialize the string table and the string cache
 */
-void
-luaS_init(lua_State* L)
+void luaS_init(lua_State* L)
 {
     global_State* g = G(L);
     int i, j;
@@ -134,8 +128,7 @@ luaS_init(lua_State* L)
 /*
 ** creates a new string object
 */
-static TString*
-createstrobj(lua_State* L, size_t l, int tag, unsigned int h)
+static TString* createstrobj(lua_State* L, size_t l, int tag, unsigned int h)
 {
     TString* ts;
     GCObject* o;
@@ -150,8 +143,7 @@ createstrobj(lua_State* L, size_t l, int tag, unsigned int h)
 }
 
 
-TString*
-luaS_createlngstrobj(lua_State* L, size_t l)
+TString* luaS_createlngstrobj(lua_State* L, size_t l)
 {
     TString* ts  = createstrobj(L, l, LUA_TLNGSTR, G(L)->seed);
     ts->u.lnglen = l;
@@ -159,8 +151,7 @@ luaS_createlngstrobj(lua_State* L, size_t l)
 }
 
 
-void
-luaS_remove(lua_State* L, TString* ts)
+void luaS_remove(lua_State* L, TString* ts)
 {
     stringtable* tb = &G(L)->strt;
     TString** p     = &tb->hash[lmod(ts->hash, tb->size)];
@@ -174,8 +165,7 @@ luaS_remove(lua_State* L, TString* ts)
 /*
 ** checks whether short string exists and reuses it or creates a new one
 */
-static TString*
-internshrstr(lua_State* L, const char* str, size_t l)
+static TString* internshrstr(lua_State* L, const char* str, size_t l)
 {
     TString* ts;
     global_State* g = G(L);
@@ -207,8 +197,7 @@ internshrstr(lua_State* L, const char* str, size_t l)
 /*
 ** new string (with explicit length)
 */
-TString*
-luaS_newlstr(lua_State* L, const char* str, size_t l)
+TString* luaS_newlstr(lua_State* L, const char* str, size_t l)
 {
     if (l <= LUAI_MAXSHORTLEN) /* short string? */
         return internshrstr(L, str, l);
@@ -228,8 +217,7 @@ luaS_newlstr(lua_State* L, const char* str, size_t l)
 ** only zero-terminated strings, so it is safe to use 'strcmp' to
 ** check hits.
 */
-TString*
-luaS_new(lua_State* L, const char* str)
+TString* luaS_new(lua_State* L, const char* str)
 {
     unsigned int i = point2uint(str) % STRCACHE_N; /* hash */
     int j;
@@ -246,8 +234,7 @@ luaS_new(lua_State* L, const char* str)
 }
 
 
-Udata*
-luaS_newudata(lua_State* L, size_t s)
+Udata* luaS_newudata(lua_State* L, size_t s)
 {
     Udata* u;
     GCObject* o;

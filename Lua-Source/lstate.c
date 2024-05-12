@@ -77,8 +77,7 @@ typedef struct LG
         p += sizeof(t);               \
     }
 
-static unsigned int
-makeseed(lua_State* L)
+static unsigned int makeseed(lua_State* L)
 {
     char buff[4 * sizeof(size_t)];
     unsigned int h = luai_makeseed();
@@ -96,8 +95,7 @@ makeseed(lua_State* L)
 ** set GCdebt to a new value keeping the value (totalbytes + GCdebt)
 ** invariant (and avoiding underflows in 'totalbytes')
 */
-void
-luaE_setdebt(global_State* g, l_mem debt)
+void luaE_setdebt(global_State* g, l_mem debt)
 {
     l_mem tb = gettotalbytes(g);
     lua_assert(tb > 0);
@@ -107,8 +105,7 @@ luaE_setdebt(global_State* g, l_mem debt)
 }
 
 
-CallInfo*
-luaE_extendCI(lua_State* L)
+CallInfo* luaE_extendCI(lua_State* L)
 {
     CallInfo* ci = luaM_new(L, CallInfo);
     lua_assert(L->ci->next == NULL);
@@ -123,8 +120,7 @@ luaE_extendCI(lua_State* L)
 /*
 ** free all CallInfo structures not in use by a thread
 */
-void
-luaE_freeCI(lua_State* L)
+void luaE_freeCI(lua_State* L)
 {
     CallInfo* ci   = L->ci;
     CallInfo* next = ci->next;
@@ -140,8 +136,7 @@ luaE_freeCI(lua_State* L)
 /*
 ** free half of the CallInfo structures not in use by a thread
 */
-void
-luaE_shrinkCI(lua_State* L)
+void luaE_shrinkCI(lua_State* L)
 {
     CallInfo* ci = L->ci;
     CallInfo* next2; /* next's next */
@@ -156,8 +151,7 @@ luaE_shrinkCI(lua_State* L)
 }
 
 
-static void
-stack_init(lua_State* L1, lua_State* L)
+static void stack_init(lua_State* L1, lua_State* L)
 {
     int i;
     CallInfo* ci;
@@ -178,8 +172,7 @@ stack_init(lua_State* L1, lua_State* L)
 }
 
 
-static void
-freestack(lua_State* L)
+static void freestack(lua_State* L)
 {
     if (L->stack == NULL) return; /* stack not completely built yet */
     L->ci = &L->base_ci;          /* free the entire 'ci' list */
@@ -192,8 +185,7 @@ freestack(lua_State* L)
 /*
 ** Create registry table and its predefined values
 */
-static void
-init_registry(lua_State* L, global_State* g)
+static void init_registry(lua_State* L, global_State* g)
 {
     TValue temp;
     /* create registry */
@@ -213,8 +205,7 @@ init_registry(lua_State* L, global_State* g)
 ** open parts of the state that may cause memory-allocation errors.
 ** ('g->version' != NULL flags that the state was completely build)
 */
-static void
-f_luaopen(lua_State* L, void* ud)
+static void f_luaopen(lua_State* L, void* ud)
 {
     global_State* g = G(L);
     UNUSED(ud);
@@ -233,8 +224,7 @@ f_luaopen(lua_State* L, void* ud)
 ** preinitialize a thread with consistent values without allocating
 ** any memory (to avoid errors)
 */
-static void
-preinit_thread(lua_State* L, global_State* g)
+static void preinit_thread(lua_State* L, global_State* g)
 {
     G(L)             = g;
     L->stack         = NULL;
@@ -256,8 +246,7 @@ preinit_thread(lua_State* L, global_State* g)
 }
 
 
-static void
-close_state(lua_State* L)
+static void close_state(lua_State* L)
 {
     global_State* g = G(L);
     luaF_close(L, L->stack); /* close all upvalues for this thread */
@@ -271,8 +260,7 @@ close_state(lua_State* L)
 }
 
 
-LUA_API lua_State*
-lua_newthread(lua_State* L)
+LUA_API lua_State* lua_newthread(lua_State* L)
 {
     global_State* g = G(L);
     lua_State* L1;
@@ -302,8 +290,7 @@ lua_newthread(lua_State* L)
 }
 
 
-void
-luaE_freethread(lua_State* L, lua_State* L1)
+void luaE_freethread(lua_State* L, lua_State* L1)
 {
     LX* l = fromstate(L1);
     luaF_close(L1, L1->stack); /* close all upvalues for this thread */
@@ -314,8 +301,7 @@ luaE_freethread(lua_State* L, lua_State* L1)
 }
 
 
-LUA_API lua_State*
-lua_newstate(lua_Alloc f, void* ud)
+LUA_API lua_State* lua_newstate(lua_Alloc f, void* ud)
 {
     int i;
     lua_State* L;
@@ -362,8 +348,7 @@ lua_newstate(lua_Alloc f, void* ud)
 }
 
 
-LUA_API void
-lua_close(lua_State* L)
+LUA_API void lua_close(lua_State* L)
 {
     L = G(L)->mainthread; /* only the main thread can be closed */
     lua_lock(L);

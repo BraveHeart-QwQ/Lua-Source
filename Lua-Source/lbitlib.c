@@ -42,8 +42,7 @@
     #define mask(n) (~((ALLONES << 1) << ((n)-1)))
 
 
-static lua_Unsigned
-andaux(lua_State* L)
+static lua_Unsigned andaux(lua_State* L)
 {
     int i, n = lua_gettop(L);
     lua_Unsigned r = ~(lua_Unsigned)0;
@@ -52,8 +51,7 @@ andaux(lua_State* L)
 }
 
 
-static int
-b_and(lua_State* L)
+static int b_and(lua_State* L)
 {
     lua_Unsigned r = andaux(L);
     pushunsigned(L, r);
@@ -61,8 +59,7 @@ b_and(lua_State* L)
 }
 
 
-static int
-b_test(lua_State* L)
+static int b_test(lua_State* L)
 {
     lua_Unsigned r = andaux(L);
     lua_pushboolean(L, r != 0);
@@ -70,8 +67,7 @@ b_test(lua_State* L)
 }
 
 
-static int
-b_or(lua_State* L)
+static int b_or(lua_State* L)
 {
     int i, n = lua_gettop(L);
     lua_Unsigned r = 0;
@@ -81,8 +77,7 @@ b_or(lua_State* L)
 }
 
 
-static int
-b_xor(lua_State* L)
+static int b_xor(lua_State* L)
 {
     int i, n = lua_gettop(L);
     lua_Unsigned r = 0;
@@ -92,8 +87,7 @@ b_xor(lua_State* L)
 }
 
 
-static int
-b_not(lua_State* L)
+static int b_not(lua_State* L)
 {
     lua_Unsigned r = ~checkunsigned(L, 1);
     pushunsigned(L, trim(r));
@@ -101,8 +95,7 @@ b_not(lua_State* L)
 }
 
 
-static int
-b_shift(lua_State* L, lua_Unsigned r, lua_Integer i)
+static int b_shift(lua_State* L, lua_Unsigned r, lua_Integer i)
 {
     if (i < 0) { /* shift right? */
         i = -i;
@@ -120,22 +113,19 @@ b_shift(lua_State* L, lua_Unsigned r, lua_Integer i)
 }
 
 
-static int
-b_lshift(lua_State* L)
+static int b_lshift(lua_State* L)
 {
     return b_shift(L, checkunsigned(L, 1), luaL_checkinteger(L, 2));
 }
 
 
-static int
-b_rshift(lua_State* L)
+static int b_rshift(lua_State* L)
 {
     return b_shift(L, checkunsigned(L, 1), -luaL_checkinteger(L, 2));
 }
 
 
-static int
-b_arshift(lua_State* L)
+static int b_arshift(lua_State* L)
 {
     lua_Unsigned r = checkunsigned(L, 1);
     lua_Integer i  = luaL_checkinteger(L, 2);
@@ -149,8 +139,7 @@ b_arshift(lua_State* L)
 }
 
 
-static int
-b_rot(lua_State* L, lua_Integer d)
+static int b_rot(lua_State* L, lua_Integer d)
 {
     lua_Unsigned r = checkunsigned(L, 1);
     int i          = d & (LUA_NBITS - 1); /* i = d % NBITS */
@@ -162,15 +151,13 @@ b_rot(lua_State* L, lua_Integer d)
 }
 
 
-static int
-b_lrot(lua_State* L)
+static int b_lrot(lua_State* L)
 {
     return b_rot(L, luaL_checkinteger(L, 2));
 }
 
 
-static int
-b_rrot(lua_State* L)
+static int b_rrot(lua_State* L)
 {
     return b_rot(L, -luaL_checkinteger(L, 2));
 }
@@ -182,8 +169,7 @@ b_rrot(lua_State* L)
 ** ('luaL_error' called without 'return' to avoid later warnings about
 ** 'width' being used uninitialized.)
 */
-static int
-fieldargs(lua_State* L, int farg, int* width)
+static int fieldargs(lua_State* L, int farg, int* width)
 {
     lua_Integer f = luaL_checkinteger(L, farg);
     lua_Integer w = luaL_optinteger(L, farg + 1, 1);
@@ -195,8 +181,7 @@ fieldargs(lua_State* L, int farg, int* width)
 }
 
 
-static int
-b_extract(lua_State* L)
+static int b_extract(lua_State* L)
 {
     int w;
     lua_Unsigned r = trim(checkunsigned(L, 1));
@@ -207,8 +192,7 @@ b_extract(lua_State* L)
 }
 
 
-static int
-b_replace(lua_State* L)
+static int b_replace(lua_State* L)
 {
     int w;
     lua_Unsigned r = trim(checkunsigned(L, 1));
@@ -237,8 +221,7 @@ static const luaL_Reg bitlib[] = {
     {NULL, NULL}};
 
 
-LUAMOD_API int
-luaopen_bit32(lua_State* L)
+LUAMOD_API int luaopen_bit32(lua_State* L)
 {
     luaL_newlib(L, bitlib);
     return 1;
@@ -248,8 +231,7 @@ luaopen_bit32(lua_State* L)
 #else /* }{ */
 
 
-LUAMOD_API int
-luaopen_bit32(lua_State* L)
+LUAMOD_API int luaopen_bit32(lua_State* L)
 {
     return luaL_error(L, "library 'bit32' has been deprecated");
 }

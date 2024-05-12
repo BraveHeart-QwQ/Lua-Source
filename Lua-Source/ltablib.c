@@ -29,8 +29,7 @@
 #define aux_getn(L, n, w) (checktab(L, n, (w) | TAB_L), luaL_len(L, n))
 
 
-static int
-checkfield(lua_State* L, const char* key, int n)
+static int checkfield(lua_State* L, const char* key, int n)
 {
     lua_pushstring(L, key);
     return (lua_rawget(L, -n) != LUA_TNIL);
@@ -41,8 +40,7 @@ checkfield(lua_State* L, const char* key, int n)
 ** Check that 'arg' either is a table or can behave like one (that is,
 ** has a metatable with the required metamethods)
 */
-static void
-checktab(lua_State* L, int arg, int what)
+static void checktab(lua_State* L, int arg, int what)
 {
     if (lua_type(L, arg) != LUA_TTABLE) { /* is it not a table? */
         int n = 1;                        /* number of elements to pop */
@@ -58,8 +56,7 @@ checktab(lua_State* L, int arg, int what)
 
 
 #if defined(LUA_COMPAT_MAXN)
-static int
-maxn(lua_State* L)
+static int maxn(lua_State* L)
 {
     lua_Number max = 0;
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -77,8 +74,7 @@ maxn(lua_State* L)
 #endif
 
 
-static int
-tinsert(lua_State* L)
+static int tinsert(lua_State* L)
 {
     lua_Integer e = aux_getn(L, 1, TAB_RW) + 1; /* first empty element */
     lua_Integer pos;                            /* where to insert new element */
@@ -106,8 +102,7 @@ tinsert(lua_State* L)
 }
 
 
-static int
-tremove(lua_State* L)
+static int tremove(lua_State* L)
 {
     lua_Integer size = aux_getn(L, 1, TAB_RW);
     lua_Integer pos  = luaL_optinteger(L, 2, size);
@@ -130,8 +125,7 @@ tremove(lua_State* L)
 ** "possible" means destination after original range, or smaller
 ** than origin, or copying to another table.
 */
-static int
-tmove(lua_State* L)
+static int tmove(lua_State* L)
 {
     lua_Integer f = luaL_checkinteger(L, 2);
     lua_Integer e = luaL_checkinteger(L, 3);
@@ -162,8 +156,7 @@ tmove(lua_State* L)
 }
 
 
-static void
-addfield(lua_State* L, luaL_Buffer* b, lua_Integer i)
+static void addfield(lua_State* L, luaL_Buffer* b, lua_Integer i)
 {
     lua_geti(L, 1, i);
     if (!lua_isstring(L, -1))
@@ -172,8 +165,7 @@ addfield(lua_State* L, luaL_Buffer* b, lua_Integer i)
 }
 
 
-static int
-tconcat(lua_State* L)
+static int tconcat(lua_State* L)
 {
     luaL_Buffer b;
     lua_Integer last = aux_getn(L, 1, TAB_R);
@@ -199,8 +191,7 @@ tconcat(lua_State* L)
 ** =======================================================
 */
 
-static int
-pack(lua_State* L)
+static int pack(lua_State* L)
 {
     int i;
     int n = lua_gettop(L);    /* number of elements to pack */
@@ -214,8 +205,7 @@ pack(lua_State* L)
 }
 
 
-static int
-unpack(lua_State* L)
+static int unpack(lua_State* L)
 {
     lua_Unsigned n;
     lua_Integer i = luaL_optinteger(L, 2, 1);
@@ -266,8 +256,7 @@ typedef unsigned int IdxT;
 ** anything without risking overflows. A safe way to use their values
 ** is to copy them to an array of a known type and use the array values.
 */
-static unsigned int
-l_randomizePivot(void)
+static unsigned int l_randomizePivot(void)
 {
     clock_t c = clock();
     time_t t  = time(NULL);
@@ -286,8 +275,7 @@ l_randomizePivot(void)
 #define RANLIMIT 100u
 
 
-static void
-set2(lua_State* L, IdxT i, IdxT j)
+static void set2(lua_State* L, IdxT i, IdxT j)
 {
     lua_seti(L, 1, i);
     lua_seti(L, 1, j);
@@ -298,8 +286,7 @@ set2(lua_State* L, IdxT i, IdxT j)
 ** Return true iff value at stack index 'a' is less than the value at
 ** index 'b' (according to the order of the sort).
 */
-static int
-sort_comp(lua_State* L, int a, int b)
+static int sort_comp(lua_State* L, int a, int b)
 {
     if (lua_isnil(L, 2))                       /* no function? */
         return lua_compare(L, a, b, LUA_OPLT); /* a < b */
@@ -322,8 +309,7 @@ sort_comp(lua_State* L, int a, int b)
 ** Pos-condition: a[lo .. i - 1] <= a[i] == P <= a[i + 1 .. up]
 ** returns 'i'.
 */
-static IdxT
-partition(lua_State* L, IdxT lo, IdxT up)
+static IdxT partition(lua_State* L, IdxT lo, IdxT up)
 {
     IdxT i = lo;     /* will be incremented before first use */
     IdxT j = up - 1; /* will be decremented before first use */
@@ -360,8 +346,7 @@ partition(lua_State* L, IdxT lo, IdxT up)
 ** Choose an element in the middle (2nd-3th quarters) of [lo,up]
 ** "randomized" by 'rnd'
 */
-static IdxT
-choosePivot(IdxT lo, IdxT up, unsigned int rnd)
+static IdxT choosePivot(IdxT lo, IdxT up, unsigned int rnd)
 {
     IdxT r4 = (up - lo) / 4; /* range/4 */
     IdxT p  = rnd % (r4 * 2) + (lo + r4);
@@ -373,8 +358,7 @@ choosePivot(IdxT lo, IdxT up, unsigned int rnd)
 /*
 ** QuickSort algorithm (recursive function)
 */
-static void
-auxsort(lua_State* L, IdxT lo, IdxT up, unsigned int rnd)
+static void auxsort(lua_State* L, IdxT lo, IdxT up, unsigned int rnd)
 {
     while (lo < up) { /* loop for tail recursion */
         IdxT p;       /* Pivot index */
@@ -425,8 +409,7 @@ auxsort(lua_State* L, IdxT lo, IdxT up, unsigned int rnd)
 }
 
 
-static int
-sort(lua_State* L)
+static int sort(lua_State* L)
 {
     lua_Integer n = aux_getn(L, 1, TAB_RW);
     if (n > 1) { /* non-trivial interval? */
@@ -451,8 +434,7 @@ static const luaL_Reg tab_funcs[] = {
     {"move", tmove},     {"sort", sort}, {NULL, NULL}};
 
 
-LUAMOD_API int
-luaopen_table(lua_State* L)
+LUAMOD_API int luaopen_table(lua_State* L)
 {
     luaL_newlib(L, tab_funcs);
 #if defined(LUA_COMPAT_UNPACK)
