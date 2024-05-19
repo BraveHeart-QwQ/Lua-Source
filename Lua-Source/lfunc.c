@@ -55,8 +55,8 @@ void luaF_initupvals(lua_State* L, LClosure* cl)
 UpVal* luaF_findupval(lua_State* L, StkId level)
 {
     UpVal** pp = &L->openupval;
-    UpVal* p;
-    UpVal* uv;
+    UpVal*  p;
+    UpVal*  uv;
     lua_assert(isintwups(L) || L->openupval == NULL);
     while (*pp != NULL && (p = *pp)->v >= level) {
         lua_assert(upisopen(p));
@@ -99,7 +99,7 @@ void luaF_close(lua_State* L, StkId level)
 Proto* luaF_newproto(lua_State* L)
 {
     GCObject* o        = luaC_newobj(L, LUA_TPROTO, sizeof(Proto));
-    Proto* f           = gco2p(o);
+    Proto*    f        = gco2p(o);
     f->k               = NULL;
     f->sizek           = 0;
     f->p               = NULL;

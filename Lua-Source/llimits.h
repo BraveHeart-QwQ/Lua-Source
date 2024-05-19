@@ -19,13 +19,13 @@
 */
 #if defined(LUAI_MEM) /* { external definitions? */
 typedef LUAI_UMEM lu_mem;
-typedef LUAI_MEM l_mem;
+typedef LUAI_MEM  l_mem;
 #elif LUAI_BITSINT >= 32 /* }{ */
-typedef size_t lu_mem;
+typedef size_t    lu_mem;
 typedef ptrdiff_t l_mem;
 #else /* 16-bit ints */  /* }{ */
 typedef unsigned long lu_mem;
-typedef long l_mem;
+typedef long          l_mem;
 #endif                   /* } */
 
 
@@ -62,36 +62,36 @@ typedef LUAI_USER_ALIGNMENT_T L_Umaxalign;
 #else
 typedef union
 {
-    lua_Number n;
-    double u;
-    void* s;
+    lua_Number  n;
+    double      u;
+    void*       s;
     lua_Integer i;
-    long l;
+    long        l;
 } L_Umaxalign;
 #endif
 
 
 /* types of 'usual argument conversions' for lua_Number and lua_Integer */
 typedef LUAI_UACNUMBER l_uacNumber;
-typedef LUAI_UACINT l_uacInt;
+typedef LUAI_UACINT    l_uacInt;
 
 
 /* internal assertions for in-house debugging */
 #if defined(lua_assert)
-    #define check_exp(c, e) (lua_assert(c), (e))
-    /* to avoid problems with conditions too long */
-    #define lua_longassert(c) ((c) ? (void)0 : lua_assert(0))
+#    define check_exp(c, e) (lua_assert(c), (e))
+/* to avoid problems with conditions too long */
+#    define lua_longassert(c) ((c) ? (void)0 : lua_assert(0))
 #else
-    #define lua_assert(c)     ((void)0)
-    #define check_exp(c, e)   (e)
-    #define lua_longassert(c) ((void)0)
+#    define lua_assert(c) ((void)0)
+#    define check_exp(c, e) (e)
+#    define lua_longassert(c) ((void)0)
 #endif
 
 /*
 ** assertion for checking API calls
 */
 #if !defined(luai_apicheck)
-    #define luai_apicheck(l, e) lua_assert(e)
+#    define luai_apicheck(l, e) lua_assert(e)
 #endif
 
 #define api_check(l, e, msg) luai_apicheck(l, (e) && msg)
@@ -99,23 +99,23 @@ typedef LUAI_UACINT l_uacInt;
 
 /* macro to avoid warnings about unused variables */
 #if !defined(UNUSED)
-    #define UNUSED(x) ((void)(x))
+#    define UNUSED(x) ((void)(x))
 #endif
 
 
 /* type casts (a macro highlights casts in the code) */
 #define cast(t, exp) ((t)(exp))
 
-#define cast_void(i)  cast(void, (i))
-#define cast_byte(i)  cast(lu_byte, (i))
-#define cast_num(i)   cast(lua_Number, (i))
-#define cast_int(i)   cast(int, (i))
+#define cast_void(i) cast(void, (i))
+#define cast_byte(i) cast(lu_byte, (i))
+#define cast_num(i) cast(lua_Number, (i))
+#define cast_int(i) cast(int, (i))
 #define cast_uchar(i) cast(unsigned char, (i))
 
 
 /* cast a signed lua_Integer to lua_Unsigned */
 #if !defined(l_castS2U)
-    #define l_castS2U(i) ((lua_Unsigned)(i))
+#    define l_castS2U(i) ((lua_Unsigned)(i))
 #endif
 
 /*
@@ -124,7 +124,7 @@ typedef LUAI_UACINT l_uacInt;
 ** work fine.
 */
 #if !defined(l_castU2S)
-    #define l_castU2S(i) ((lua_Integer)(i))
+#    define l_castU2S(i) ((lua_Integer)(i))
 #endif
 
 
@@ -132,11 +132,11 @@ typedef LUAI_UACINT l_uacInt;
 ** non-return type
 */
 #if defined(__GNUC__)
-    #define l_noret void __attribute__((noreturn))
+#    define l_noret void __attribute__((noreturn))
 #elif defined(_MSC_VER) && _MSC_VER >= 1200
-    #define l_noret void __declspec(noreturn)
+#    define l_noret void __declspec(noreturn)
 #else
-    #define l_noret void
+#    define l_noret void
 #endif
 
 
@@ -145,7 +145,7 @@ typedef LUAI_UACINT l_uacInt;
 ** in a program. (Value must fit in an unsigned short int.)
 */
 #if !defined(LUAI_MAXCCALLS)
-    #define LUAI_MAXCCALLS 200
+#    define LUAI_MAXCCALLS 200
 #endif
 
 
@@ -167,7 +167,7 @@ typedef unsigned long Instruction;
 ** #("function") = 8, #("__newindex") = 10.)
 */
 #if !defined(LUAI_MAXSHORTLEN)
-    #define LUAI_MAXSHORTLEN 40
+#    define LUAI_MAXSHORTLEN 40
 #endif
 
 
@@ -178,7 +178,7 @@ typedef unsigned long Instruction;
 ** a few dozens more.
 */
 #if !defined(MINSTRTABSIZE)
-    #define MINSTRTABSIZE 128
+#    define MINSTRTABSIZE 128
 #endif
 
 
@@ -188,14 +188,14 @@ typedef unsigned long Instruction;
 ** makes a direct cache.)
 */
 #if !defined(STRCACHE_N)
-    #define STRCACHE_N 53
-    #define STRCACHE_M 2
+#    define STRCACHE_N 53
+#    define STRCACHE_M 2
 #endif
 
 
 /* minimum size for string buffer */
 #if !defined(LUA_MINBUFFER)
-    #define LUA_MINBUFFER 32
+#    define LUA_MINBUFFER 32
 #endif
 
 
@@ -204,8 +204,8 @@ typedef unsigned long Instruction;
 ** ('lua_lock') and leaves the core ('lua_unlock')
 */
 #if !defined(lua_lock)
-    #define lua_lock(L)   ((void)0)
-    #define lua_unlock(L) ((void)0)
+#    define lua_lock(L) ((void)0)
+#    define lua_unlock(L) ((void)0)
 #endif
 
 /*
@@ -213,7 +213,7 @@ typedef unsigned long Instruction;
 ** function can yield.
 */
 #if !defined(luai_threadyield)
-    #define luai_threadyield(L) \
+#    define luai_threadyield(L) \
         {                       \
             lua_unlock(L);      \
             lua_lock(L);        \
@@ -227,27 +227,27 @@ typedef unsigned long Instruction;
 ** created/deleted/resumed/yielded.
 */
 #if !defined(luai_userstateopen)
-    #define luai_userstateopen(L) ((void)L)
+#    define luai_userstateopen(L) ((void)L)
 #endif
 
 #if !defined(luai_userstateclose)
-    #define luai_userstateclose(L) ((void)L)
+#    define luai_userstateclose(L) ((void)L)
 #endif
 
 #if !defined(luai_userstatethread)
-    #define luai_userstatethread(L, L1) ((void)L)
+#    define luai_userstatethread(L, L1) ((void)L)
 #endif
 
 #if !defined(luai_userstatefree)
-    #define luai_userstatefree(L, L1) ((void)L)
+#    define luai_userstatefree(L, L1) ((void)L)
 #endif
 
 #if !defined(luai_userstateresume)
-    #define luai_userstateresume(L, n) ((void)L)
+#    define luai_userstateresume(L, n) ((void)L)
 #endif
 
 #if !defined(luai_userstateyield)
-    #define luai_userstateyield(L, n) ((void)L)
+#    define luai_userstateyield(L, n) ((void)L)
 #endif
 
 
@@ -257,12 +257,12 @@ typedef unsigned long Instruction;
 
 /* floor division (defined as 'floor(a/b)') */
 #if !defined(luai_numidiv)
-    #define luai_numidiv(L, a, b) ((void)L, l_floor(luai_numdiv(L, a, b)))
+#    define luai_numidiv(L, a, b) ((void)L, l_floor(luai_numdiv(L, a, b)))
 #endif
 
 /* float division */
 #if !defined(luai_numdiv)
-    #define luai_numdiv(L, a, b) ((a) / (b))
+#    define luai_numdiv(L, a, b) ((a) / (b))
 #endif
 
 /*
@@ -273,7 +273,7 @@ typedef unsigned long Instruction;
 ** negative result, which is equivalent to the test below.
 */
 #if !defined(luai_nummod)
-    #define luai_nummod(L, a, b, m)        \
+#    define luai_nummod(L, a, b, m)        \
         {                                  \
             (m) = l_mathop(fmod)(a, b);    \
             if ((m) * (b) < 0) (m) += (b); \
@@ -282,19 +282,19 @@ typedef unsigned long Instruction;
 
 /* exponentiation */
 #if !defined(luai_numpow)
-    #define luai_numpow(L, a, b) ((void)L, l_mathop(pow)(a, b))
+#    define luai_numpow(L, a, b) ((void)L, l_mathop(pow)(a, b))
 #endif
 
 /* the others are quite standard operations */
 #if !defined(luai_numadd)
-    #define luai_numadd(L, a, b) ((a) + (b))
-    #define luai_numsub(L, a, b) ((a) - (b))
-    #define luai_nummul(L, a, b) ((a) * (b))
-    #define luai_numunm(L, a)    (-(a))
-    #define luai_numeq(a, b)     ((a) == (b))
-    #define luai_numlt(a, b)     ((a) < (b))
-    #define luai_numle(a, b)     ((a) <= (b))
-    #define luai_numisnan(a)     (!luai_numeq((a), (a)))
+#    define luai_numadd(L, a, b) ((a) + (b))
+#    define luai_numsub(L, a, b) ((a) - (b))
+#    define luai_nummul(L, a, b) ((a) * (b))
+#    define luai_numunm(L, a) (-(a))
+#    define luai_numeq(a, b) ((a) == (b))
+#    define luai_numlt(a, b) ((a) < (b))
+#    define luai_numle(a, b) ((a) <= (b))
+#    define luai_numisnan(a) (!luai_numeq((a), (a)))
 #endif
 
 
@@ -302,10 +302,10 @@ typedef unsigned long Instruction;
 ** macro to control inclusion of some hard tests on stack reallocation
 */
 #if !defined(HARDSTACKTESTS)
-    #define condmovestack(L, pre, pos) ((void)0)
+#    define condmovestack(L, pre, pos) ((void)0)
 #else
-    /* realloc stack keeping its size */
-    #define condmovestack(L, pre, pos)   \
+/* realloc stack keeping its size */
+#    define condmovestack(L, pre, pos)   \
         {                                \
             int sz_ = (L)->stacksize;    \
             pre;                         \
@@ -315,9 +315,9 @@ typedef unsigned long Instruction;
 #endif
 
 #if !defined(HARDMEMTESTS)
-    #define condchangemem(L, pre, pos) ((void)0)
+#    define condchangemem(L, pre, pos) ((void)0)
 #else
-    #define condchangemem(L, pre, pos) \
+#    define condchangemem(L, pre, pos) \
         {                              \
             if (G(L)->gcrunning) {     \
                 pre;                   \

@@ -41,18 +41,18 @@ enum OpMode
 /*
 ** size and position of opcode arguments.
 */
-#define SIZE_C  9
-#define SIZE_B  9
+#define SIZE_C 9
+#define SIZE_B 9
 #define SIZE_Bx (SIZE_C + SIZE_B)
-#define SIZE_A  8
+#define SIZE_A 8
 #define SIZE_Ax (SIZE_C + SIZE_B + SIZE_A)
 
 #define SIZE_OP 6
 
 #define POS_OP 0
-#define POS_A  (POS_OP + SIZE_OP)
-#define POS_C  (POS_A + SIZE_A)
-#define POS_B  (POS_C + SIZE_C)
+#define POS_A (POS_OP + SIZE_OP)
+#define POS_C (POS_A + SIZE_A)
+#define POS_B (POS_C + SIZE_C)
 #define POS_Bx POS_C
 #define POS_Ax POS_A
 
@@ -63,17 +63,17 @@ enum OpMode
 ** so they must fit in LUAI_BITSINT-1 bits (-1 for sign)
 */
 #if SIZE_Bx < LUAI_BITSINT - 1
-    #define MAXARG_Bx  ((1 << SIZE_Bx) - 1)
-    #define MAXARG_sBx (MAXARG_Bx >> 1) /* 'sBx' is signed */
+#    define MAXARG_Bx ((1 << SIZE_Bx) - 1)
+#    define MAXARG_sBx (MAXARG_Bx >> 1) /* 'sBx' is signed */
 #else
-    #define MAXARG_Bx  MAX_INT
-    #define MAXARG_sBx MAX_INT
+#    define MAXARG_Bx MAX_INT
+#    define MAXARG_sBx MAX_INT
 #endif
 
 #if SIZE_Ax < LUAI_BITSINT - 1
-    #define MAXARG_Ax ((1 << SIZE_Ax) - 1)
+#    define MAXARG_Ax ((1 << SIZE_Ax) - 1)
 #else
-    #define MAXARG_Ax MAX_INT
+#    define MAXARG_Ax MAX_INT
 #endif
 
 
@@ -100,22 +100,22 @@ enum OpMode
 #define setarg(i, v, pos, size) \
     ((i) = (((i)&MASK0(size, pos)) | ((cast(Instruction, v) << pos) & MASK1(size, pos))))
 
-#define GETARG_A(i)    getarg(i, POS_A, SIZE_A)
+#define GETARG_A(i) getarg(i, POS_A, SIZE_A)
 #define SETARG_A(i, v) setarg(i, v, POS_A, SIZE_A)
 
-#define GETARG_B(i)    getarg(i, POS_B, SIZE_B)
+#define GETARG_B(i) getarg(i, POS_B, SIZE_B)
 #define SETARG_B(i, v) setarg(i, v, POS_B, SIZE_B)
 
-#define GETARG_C(i)    getarg(i, POS_C, SIZE_C)
+#define GETARG_C(i) getarg(i, POS_C, SIZE_C)
 #define SETARG_C(i, v) setarg(i, v, POS_C, SIZE_C)
 
-#define GETARG_Bx(i)    getarg(i, POS_Bx, SIZE_Bx)
+#define GETARG_Bx(i) getarg(i, POS_Bx, SIZE_Bx)
 #define SETARG_Bx(i, v) setarg(i, v, POS_Bx, SIZE_Bx)
 
-#define GETARG_Ax(i)    getarg(i, POS_Ax, SIZE_Ax)
+#define GETARG_Ax(i) getarg(i, POS_Ax, SIZE_Ax)
 #define SETARG_Ax(i, v) setarg(i, v, POS_Ax, SIZE_Ax)
 
-#define GETARG_sBx(i)    (GETARG_Bx(i) - MAXARG_sBx)
+#define GETARG_sBx(i) (GETARG_Bx(i) - MAXARG_sBx)
 #define SETARG_sBx(i, b) SETARG_Bx((i), cast(unsigned int, (b) + MAXARG_sBx))
 
 
@@ -143,7 +143,7 @@ enum OpMode
 #define INDEXK(r) ((int)(r) & ~BITRK)
 
 #if !defined(MAXINDEXRK) /* (for debugging only) */
-    #define MAXINDEXRK (BITRK - 1)
+#    define MAXINDEXRK (BITRK - 1)
 #endif
 
 /* code a constant index as a RK value */
@@ -285,8 +285,8 @@ enum OpArgMask
 LUAI_DDEC const lu_byte luaP_opmodes[NUM_OPCODES];
 
 #define getOpMode(m) (cast(enum OpMode, luaP_opmodes[m] & 3))
-#define getBMode(m)  (cast(enum OpArgMask, (luaP_opmodes[m] >> 4) & 3))
-#define getCMode(m)  (cast(enum OpArgMask, (luaP_opmodes[m] >> 2) & 3))
+#define getBMode(m) (cast(enum OpArgMask, (luaP_opmodes[m] >> 4) & 3))
+#define getCMode(m) (cast(enum OpArgMask, (luaP_opmodes[m] >> 2) & 3))
 #define testAMode(m) (luaP_opmodes[m] & (1 << 6))
 #define testTMode(m) (luaP_opmodes[m] & (1 << 7))
 

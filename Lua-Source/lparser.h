@@ -49,7 +49,7 @@ typedef enum
 } expkind;
 
 
-#define vkisvar(k)   (VLOCAL <= (k) && (k) <= VINDEXED)
+#define vkisvar(k) (VLOCAL <= (k) && (k) <= VINDEXED)
 #define vkisinreg(k) ((k) == VNONRELOC || (k) == VLOCAL)
 
 typedef struct expdesc
@@ -58,13 +58,13 @@ typedef struct expdesc
     union
     {
         lua_Integer ival; /* for VKINT */
-        lua_Number nval;  /* for VKFLT */
-        int info;         /* for generic use */
+        lua_Number  nval; /* for VKFLT */
+        int         info; /* for generic use */
         struct
-        {               /* for indexed variables (VINDEXED) */
-            short idx;  /* index (R/K) */
-            lu_byte t;  /* table (register or upvalue) */
-            lu_byte vt; /* whether 't' is register (VLOCAL) or upvalue (VUPVAL) */
+        {                /* for indexed variables (VINDEXED) */
+            short   idx; /* index (R/K) */
+            lu_byte t;   /* table (register or upvalue) */
+            lu_byte vt;  /* whether 't' is register (VLOCAL) or upvalue (VUPVAL) */
         } ind;
     } u;
     int t; /* patch list of 'exit when true' */
@@ -82,19 +82,19 @@ typedef struct Vardesc
 /* description of pending goto statements and label statements */
 typedef struct Labeldesc
 {
-    TString* name;   /* label identifier */
-    int pc;          /* position in code */
-    int line;        /* line where it appeared */
-    lu_byte nactvar; /* local level where it appears in current block */
+    TString* name;    /* label identifier */
+    int      pc;      /* position in code */
+    int      line;    /* line where it appeared */
+    lu_byte  nactvar; /* local level where it appears in current block */
 } Labeldesc;
 
 
 /* list of labels or gotos */
 typedef struct Labellist
 {
-    Labeldesc* arr; /* array */
-    int n;          /* number of entries in use */
-    int size;       /* array size */
+    Labeldesc* arr;  /* array */
+    int        n;    /* number of entries in use */
+    int        size; /* array size */
 } Labellist;
 
 
@@ -104,8 +104,8 @@ typedef struct Dyndata
     struct
     { /* list of active local variables */
         Vardesc* arr;
-        int n;
-        int size;
+        int      n;
+        int      size;
     } actvar;
     Labellist gt;    /* list of pending gotos */
     Labellist label; /* list of active labels */
@@ -119,20 +119,20 @@ struct BlockCnt; /* defined in lparser.c */
 /* state needed to generate code for a given function */
 typedef struct FuncState
 {
-    Proto* f;               /* current function header */
-    struct FuncState* prev; /* enclosing function */
-    struct LexState* ls;    /* lexical state */
-    struct BlockCnt* bl;    /* chain of current blocks */
-    int pc;                 /* next position to code (equivalent to 'ncode') */
-    int lasttarget;         /* 'label' of last 'jump label' */
-    int jpc;                /* list of pending jumps to 'pc' */
-    int nk;                 /* number of elements in 'k' */
-    int np;                 /* number of elements in 'p' */
-    int firstlocal;         /* index of first local var (in Dyndata array) */
-    short nlocvars;         /* number of elements in 'f->locvars' */
-    lu_byte nactvar;        /* number of active local variables */
-    lu_byte nups;           /* number of upvalues */
-    lu_byte freereg;        /* first free register */
+    Proto*            f;          /* current function header */
+    struct FuncState* prev;       /* enclosing function */
+    struct LexState*  ls;         /* lexical state */
+    struct BlockCnt*  bl;         /* chain of current blocks */
+    int               pc;         /* next position to code (equivalent to 'ncode') */
+    int               lasttarget; /* 'label' of last 'jump label' */
+    int               jpc;        /* list of pending jumps to 'pc' */
+    int               nk;         /* number of elements in 'k' */
+    int               np;         /* number of elements in 'p' */
+    int               firstlocal; /* index of first local var (in Dyndata array) */
+    short             nlocvars;   /* number of elements in 'f->locvars' */
+    lu_byte           nactvar;    /* number of active local variables */
+    lu_byte           nups;       /* number of upvalues */
+    lu_byte           freereg;    /* first free register */
 } FuncState;
 
 

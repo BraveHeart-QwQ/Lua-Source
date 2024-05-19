@@ -32,14 +32,14 @@
 */
 struct UpVal
 {
-    TValue* v;       /* points to stack or to its own value */
-    lu_mem refcount; /* reference counter */
+    TValue* v;        /* points to stack or to its own value */
+    lu_mem  refcount; /* reference counter */
     union
     {
         struct
-        {                /* (when open) */
-            UpVal* next; /* linked list */
-            int touched; /* mark to avoid cycles with dead threads */
+        {                   /* (when open) */
+            UpVal* next;    /* linked list */
+            int    touched; /* mark to avoid cycles with dead threads */
         } open;
         TValue value; /* the value (when closed) */
     } u;
@@ -48,13 +48,13 @@ struct UpVal
 #define upisopen(up) ((up)->v != &(up)->u.value)
 
 
-LUAI_FUNC Proto* luaF_newproto(lua_State* L);
-LUAI_FUNC CClosure* luaF_newCclosure(lua_State* L, int nelems);
-LUAI_FUNC LClosure* luaF_newLclosure(lua_State* L, int nelems);
-LUAI_FUNC void luaF_initupvals(lua_State* L, LClosure* cl);
-LUAI_FUNC UpVal* luaF_findupval(lua_State* L, StkId level);
-LUAI_FUNC void luaF_close(lua_State* L, StkId level);
-LUAI_FUNC void luaF_freeproto(lua_State* L, Proto* f);
+LUAI_FUNC Proto*      luaF_newproto(lua_State* L);
+LUAI_FUNC CClosure*   luaF_newCclosure(lua_State* L, int nelems);
+LUAI_FUNC LClosure*   luaF_newLclosure(lua_State* L, int nelems);
+LUAI_FUNC void        luaF_initupvals(lua_State* L, LClosure* cl);
+LUAI_FUNC UpVal*      luaF_findupval(lua_State* L, StkId level);
+LUAI_FUNC void        luaF_close(lua_State* L, StkId level);
+LUAI_FUNC void        luaF_freeproto(lua_State* L, Proto* f);
 LUAI_FUNC const char* luaF_getlocalname(const Proto* func, int local_number, int pc);
 
 

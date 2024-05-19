@@ -25,7 +25,7 @@
 #include <string.h>
 
 
-LUAI_DDEF const TValue luaO_nilobject_ = {NILCONSTANT};
+LUAI_DDEF const TValue luaO_nilobject_ = { NILCONSTANT };
 
 
 /*
@@ -70,7 +70,8 @@ int luaO_ceillog2(unsigned int x)
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
         8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
+        8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+    };
     int l = 0;
     x--;
     while (x >= 256) {
@@ -158,8 +159,8 @@ void luaO_arith(lua_State* L, int op, const TValue* p1, const TValue* p2, TValue
         if (tointeger(p1, &i1) && tointeger(p2, &i2)) {
             setivalue(res, intarith(L, op, i1, i2));
             return;
-        }
-        else break; /* go to the end */
+        } else
+            break; /* go to the end */
     }
     case LUA_OPDIV:
     case LUA_OPPOW: { /* operate only on floats */
@@ -168,8 +169,8 @@ void luaO_arith(lua_State* L, int op, const TValue* p1, const TValue* p2, TValue
         if (tonumber(p1, &n1) && tonumber(p2, &n2)) {
             setfltvalue(res, numarith(L, op, n1, n2));
             return;
-        }
-        else break; /* go to the end */
+        } else
+            break; /* go to the end */
     }
     default: { /* other operations */
         lua_Number n1;
@@ -177,12 +178,11 @@ void luaO_arith(lua_State* L, int op, const TValue* p1, const TValue* p2, TValue
         if (ttisinteger(p1) && ttisinteger(p2)) {
             setivalue(res, intarith(L, op, ivalue(p1), ivalue(p2)));
             return;
-        }
-        else if (tonumber(p1, &n1) && tonumber(p2, &n2)) {
+        } else if (tonumber(p1, &n1) && tonumber(p2, &n2)) {
             setfltvalue(res, numarith(L, op, n1, n2));
             return;
-        }
-        else break; /* go to the end */
+        } else
+            break; /* go to the end */
     }
     }
     /* could not perform raw operation; try metamethod */
@@ -193,8 +193,10 @@ void luaO_arith(lua_State* L, int op, const TValue* p1, const TValue* p2, TValue
 
 int luaO_hexavalue(int c)
 {
-    if (lisdigit(c)) return c - '0';
-    else return (ltolower(c) - 'a') + 10;
+    if (lisdigit(c))
+        return c - '0';
+    else
+        return (ltolower(c) - 'a') + 10;
 }
 
 
@@ -203,8 +205,8 @@ static int isneg(const char** s)
     if (**s == '-') {
         (*s)++;
         return 1;
-    }
-    else if (**s == '+') (*s)++;
+    } else if (**s == '+')
+        (*s)++;
     return 0;
 }
 
@@ -217,9 +219,9 @@ static int isneg(const char** s)
 
 #if !defined(lua_strx2number)
 
-    /* maximum number of significant digits to read (to avoid overflows
+/* maximum number of significant digits to read (to avoid overflows
        even with single floats) */
-    #define MAXSIGDIG 30
+#    define MAXSIGDIG 30
 
 /*
 ** convert an hexadecimal numeric string to a number, following
@@ -227,32 +229,34 @@ static int isneg(const char** s)
 */
 static lua_Number lua_strx2number(const char* s, char** endptr)
 {
-    int dot      = lua_getlocaledecpoint();
-    lua_Number r = 0.0;                                       /* result (accumulator) */
-    int sigdig   = 0;                                         /* number of significant digits */
-    int nosigdig = 0;                                         /* number of non-significant digits */
-    int e        = 0;                                         /* exponent correction */
-    int neg;                                                  /* 1 if number is negative */
-    int hasdot = 0;                                           /* true after seen a dot */
-    *endptr    = cast(char*, s);                              /* nothing is valid yet */
+    int        dot      = lua_getlocaledecpoint();
+    lua_Number r        = 0.0;                                /* result (accumulator) */
+    int        sigdig   = 0;                                  /* number of significant digits */
+    int        nosigdig = 0;                                  /* number of non-significant digits */
+    int        e        = 0;                                  /* exponent correction */
+    int        neg;                                           /* 1 if number is negative */
+    int        hasdot = 0;                                    /* true after seen a dot */
+    *endptr           = cast(char*, s);                       /* nothing is valid yet */
     while (lisspace(cast_uchar(*s))) s++;                     /* skip initial spaces */
     neg = isneg(&s);                                          /* check signal */
     if (!(*s == '0' && (*(s + 1) == 'x' || *(s + 1) == 'X'))) /* check '0x' */
         return 0.0;                                           /* invalid format (no '0x') */
     for (s += 2;; s++) {                                      /* skip '0x' and read numeral */
         if (*s == dot) {
-            if (hasdot) break; /* second dot? stop loop */
-            else hasdot = 1;
-        }
-        else if (lisxdigit(cast_uchar(*s))) {
+            if (hasdot)
+                break; /* second dot? stop loop */
+            else
+                hasdot = 1;
+        } else if (lisxdigit(cast_uchar(*s))) {
             if (sigdig == 0 && *s == '0') /* non-significant digit (zero)? */
                 nosigdig++;
             else if (++sigdig <= MAXSIGDIG) /* can read it without overflow? */
                 r = (r * cast_num(16.0)) + luaO_hexavalue(*s);
-            else e++;        /* too many digits; ignore, but still count for exponent */
+            else
+                e++;         /* too many digits; ignore, but still count for exponent */
             if (hasdot) e--; /* decimal digit? correct exponent */
-        }
-        else break; /* neither a dot nor a digit */
+        } else
+            break; /* neither a dot nor a digit */
     }
     if (nosigdig + sigdig == 0)                    /* no digits? */
         return 0.0;                                /* invalid format */
@@ -280,7 +284,7 @@ static lua_Number lua_strx2number(const char* s, char** endptr)
 
 /* maximum length of a numeral */
 #if !defined(L_MAXLENNUM)
-    #define L_MAXLENNUM 200
+#    define L_MAXLENNUM 200
 #endif
 
 static const char* l_str2dloc(const char* s, lua_Number* result, int mode)
@@ -313,12 +317,12 @@ static const char* l_str2d(const char* s, lua_Number* result)
 {
     const char* endptr;
     const char* pmode = strpbrk(s, ".xXnN");
-    int mode          = pmode ? ltolower(cast_uchar(*pmode)) : 0;
+    int         mode  = pmode ? ltolower(cast_uchar(*pmode)) : 0;
     if (mode == 'n') /* reject 'inf' and 'nan' */
         return NULL;
     endptr = l_str2dloc(s, result, mode); /* try to convert */
     if (endptr == NULL) {                 /* failed? may be a different locale */
-        char buff[L_MAXLENNUM + 1];
+        char        buff[L_MAXLENNUM + 1];
         const char* pdot = strchr(s, '.');
         if (strlen(s) > L_MAXLENNUM || pdot == NULL) return NULL; /* string too long or no dot; fail */
         strcpy(buff, s);                                          /* copy string to buffer */
@@ -330,14 +334,14 @@ static const char* l_str2d(const char* s, lua_Number* result)
 }
 
 
-#define MAXBY10  cast(lua_Unsigned, LUA_MAXINTEGER / 10)
+#define MAXBY10 cast(lua_Unsigned, LUA_MAXINTEGER / 10)
 #define MAXLASTD cast_int(LUA_MAXINTEGER % 10)
 
 static const char* l_str2int(const char* s, lua_Integer* result)
 {
-    lua_Unsigned a = 0;
-    int empty      = 1;
-    int neg;
+    lua_Unsigned a     = 0;
+    int          empty = 1;
+    int          neg;
     while (lisspace(cast_uchar(*s))) s++; /* skip initial spaces */
     neg = isneg(&s);
     if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) { /* hex? */
@@ -346,8 +350,7 @@ static const char* l_str2int(const char* s, lua_Integer* result)
             a     = a * 16 + luaO_hexavalue(*s);
             empty = 0;
         }
-    }
-    else { /* decimal */
+    } else { /* decimal */
         for (; lisdigit(cast_uchar(*s)); s++) {
             int d = *s - '0';
             if (a >= MAXBY10 && (a > MAXBY10 || d > MAXLASTD + neg)) /* overflow? */
@@ -357,7 +360,8 @@ static const char* l_str2int(const char* s, lua_Integer* result)
         }
     }
     while (lisspace(cast_uchar(*s))) s++; /* skip trailing spaces */
-    if (empty || *s != '\0') return NULL; /* something wrong in the numeral */
+    if (empty || *s != '\0')
+        return NULL; /* something wrong in the numeral */
     else {
         *result = l_castU2S((neg) ? 0u - a : a);
         return s;
@@ -368,14 +372,14 @@ static const char* l_str2int(const char* s, lua_Integer* result)
 size_t luaO_str2num(const char* s, TValue* o)
 {
     lua_Integer i;
-    lua_Number n;
+    lua_Number  n;
     const char* e;
     if ((e = l_str2int(s, &i)) != NULL) { /* try as an integer */
         setivalue(o, i);
-    }
-    else if ((e = l_str2d(s, &n)) != NULL) { /* else try as a float */ setfltvalue(o, n);
-    }
-    else return 0;      /* conversion failed */
+    } else if ((e = l_str2d(s, &n)) != NULL) { /* else try as a float */
+        setfltvalue(o, n);
+    } else
+        return 0;       /* conversion failed */
     return (e - s) + 1; /* success; return string size */
 }
 
@@ -386,12 +390,13 @@ int luaO_utf8esc(char* buff, unsigned long x)
     lua_assert(x <= 0x10FFFF);
     if (x < 0x80) /* ascii? */
         buff[UTF8BUFFSZ - 1] = cast(char, x);
-    else { /* need continuation bytes */ unsigned int mfb = 0x3f; /* maximum that fits in first byte */
-        do {                                                      /* add continuation bytes */
+    else {                       /* need continuation bytes */
+        unsigned int mfb = 0x3f; /* maximum that fits in first byte */
+        do {                     /* add continuation bytes */
             buff[UTF8BUFFSZ - (n++)] = cast(char, 0x80 | (x & 0x3f));
-            x >>= 6;       /* remove added bits */
-            mfb >>= 1;     /* now there is one less bit available in first byte */
-        } while (x > mfb); /* still needs continuation byte? */
+            x >>= 6;                                        /* remove added bits */
+            mfb >>= 1;                                      /* now there is one less bit available in first byte */
+        } while (x > mfb);                                  /* still needs continuation byte? */
         buff[UTF8BUFFSZ - n] = cast(char, (~mfb << 1) | x); /* add first byte */
     }
     return n;
@@ -407,10 +412,11 @@ int luaO_utf8esc(char* buff, unsigned long x)
 */
 void luaO_tostring(lua_State* L, StkId obj)
 {
-    char buff[MAXNUMBER2STR];
+    char   buff[MAXNUMBER2STR];
     size_t len;
     lua_assert(ttisnumber(obj));
-    if (ttisinteger(obj)) len = lua_integer2str(buff, sizeof(buff), ivalue(obj));
+    if (ttisinteger(obj))
+        len = lua_integer2str(buff, sizeof(buff), ivalue(obj));
     else {
         len = lua_number2str(buff, sizeof(buff), fltvalue(obj));
 #if !defined(LUA_COMPAT_FLOATSTRING)
@@ -451,7 +457,8 @@ const char* luaO_pushvfstring(lua_State* L, const char* fmt, va_list argp)
         }
         case 'c': { /* an 'int' as a character */
             char buff = cast(char, va_arg(argp, int));
-            if (lisprint(cast_uchar(buff))) pushstr(L, &buff, 1);
+            if (lisprint(cast_uchar(buff)))
+                pushstr(L, &buff, 1);
             else /* non-printable character; print its code */
                 luaO_pushfstring(L, "<\\%d>", cast_uchar(buff));
             break;
@@ -466,21 +473,21 @@ const char* luaO_pushvfstring(lua_State* L, const char* fmt, va_list argp)
         }
         case 'f': { /* a 'lua_Number' */
             setfltvalue(L->top, cast_num(va_arg(argp, l_uacNumber)));
-        top2str: /* convert the top element to a string */
+top2str: /* convert the top element to a string */
             luaD_inctop(L);
             luaO_tostring(L, L->top - 1);
             break;
         }
-        case 'p': {                           /* a pointer */
-            char buff[4 * sizeof(void*) + 8]; /* should be enough space for a '%p' */
+        case 'p': {                            /* a pointer */
+            char  buff[4 * sizeof(void*) + 8]; /* should be enough space for a '%p' */
             void* p = va_arg(argp, void*);
-            int l   = lua_pointer2str(buff, sizeof(buff), p);
+            int   l = lua_pointer2str(buff, sizeof(buff), p);
             pushstr(L, buff, l);
             break;
         }
         case 'U': { /* an 'int' as a UTF-8 sequence */
             char buff[UTF8BUFFSZ];
-            int l = luaO_utf8esc(buff, cast(long, va_arg(argp, long)));
+            int  l = luaO_utf8esc(buff, cast(long, va_arg(argp, long)));
             pushstr(L, buff + UTF8BUFFSZ - l, l);
             break;
         }
@@ -505,7 +512,7 @@ const char* luaO_pushvfstring(lua_State* L, const char* fmt, va_list argp)
 const char* luaO_pushfstring(lua_State* L, const char* fmt, ...)
 {
     const char* msg;
-    va_list argp;
+    va_list     argp;
     va_start(argp, fmt);
     msg = luaO_pushvfstring(L, fmt, argp);
     va_end(argp);
@@ -517,8 +524,8 @@ const char* luaO_pushfstring(lua_State* L, const char* fmt, ...)
 #define LL(x) (sizeof(x) / sizeof(char) - 1)
 
 #define RETS "..."
-#define PRE  "[string \""
-#define POS  "\"]"
+#define PRE "[string \""
+#define POS "\"]"
 
 #define addstr(a, b, l) (memcpy(a, b, (l) * sizeof(char)), a += (l))
 
@@ -528,26 +535,25 @@ void luaO_chunkid(char* out, const char* source, size_t bufflen)
     if (*source == '=') { /* 'literal' source */
         if (l <= bufflen) /* small enough? */
             memcpy(out, source + 1, l * sizeof(char));
-        else { /* truncate it */ addstr(out, source + 1, bufflen - 1);
+        else { /* truncate it */
+            addstr(out, source + 1, bufflen - 1);
             *out = '\0';
         }
-    }
-    else if (*source == '@') { /* file name */
-        if (l <= bufflen)      /* small enough? */
+    } else if (*source == '@') { /* file name */
+        if (l <= bufflen)        /* small enough? */
             memcpy(out, source + 1, l * sizeof(char));
-        else { /* add '...' before rest of name */ addstr(out, RETS, LL(RETS));
+        else { /* add '...' before rest of name */
+            addstr(out, RETS, LL(RETS));
             bufflen -= LL(RETS);
             memcpy(out, source + 1 + l - bufflen, bufflen * sizeof(char));
         }
-    }
-    else {                                     /* string; format as [string "source"] */
+    } else {                                   /* string; format as [string "source"] */
         const char* nl = strchr(source, '\n'); /* find first new line (if any) */
         addstr(out, PRE, LL(PRE));             /* add prefix */
         bufflen -= LL(PRE RETS POS) + 1;       /* save space for prefix+suffix+'\0' */
         if (l < bufflen && nl == NULL) {       /* small one-line source? */
             addstr(out, source, l);            /* keep it */
-        }
-        else {
+        } else {
             if (nl != NULL) l = nl - source; /* stop at first newline */
             if (l > bufflen) l = bufflen;
             addstr(out, source, l);

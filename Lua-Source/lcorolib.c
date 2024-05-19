@@ -44,8 +44,7 @@ static int auxresume(lua_State* L, lua_State* co, int narg)
         }
         lua_xmove(co, L, nres); /* move yielded values */
         return nres;
-    }
-    else {
+    } else {
         lua_xmove(co, L, 1); /* move error message */
         return -1;           /* error flag */
     }
@@ -55,14 +54,13 @@ static int auxresume(lua_State* L, lua_State* co, int narg)
 static int luaB_coresume(lua_State* L)
 {
     lua_State* co = getco(L);
-    int r;
+    int        r;
     r = auxresume(L, co, lua_gettop(L) - 1);
     if (r < 0) {
         lua_pushboolean(L, 0);
         lua_insert(L, -2);
         return 2; /* return false + error message */
-    }
-    else {
+    } else {
         lua_pushboolean(L, 1);
         lua_insert(L, -(r + 1));
         return r + 1; /* return true + 'resume' returns */
@@ -73,7 +71,7 @@ static int luaB_coresume(lua_State* L)
 static int luaB_auxwrap(lua_State* L)
 {
     lua_State* co = lua_tothread(L, lua_upvalueindex(1));
-    int r         = auxresume(L, co, lua_gettop(L));
+    int        r  = auxresume(L, co, lua_gettop(L));
     if (r < 0) {
         if (lua_type(L, -1) == LUA_TSTRING) { /* error object is a string? */
             luaL_where(L, 1);                 /* add extra info */
@@ -114,7 +112,8 @@ static int luaB_yield(lua_State* L)
 static int luaB_costatus(lua_State* L)
 {
     lua_State* co = getco(L);
-    if (L == co) lua_pushliteral(L, "running");
+    if (L == co)
+        lua_pushliteral(L, "running");
     else {
         switch (lua_status(co)) {
         case LUA_YIELD:
@@ -124,8 +123,10 @@ static int luaB_costatus(lua_State* L)
             lua_Debug ar;
             if (lua_getstack(co, 0, &ar) > 0) /* does it have frames? */
                 lua_pushliteral(L, "normal"); /* it is running */
-            else if (lua_gettop(co) == 0) lua_pushliteral(L, "dead");
-            else lua_pushliteral(L, "suspended"); /* initial state */
+            else if (lua_gettop(co) == 0)
+                lua_pushliteral(L, "dead");
+            else
+                lua_pushliteral(L, "suspended"); /* initial state */
             break;
         }
         default: /* some error occurred */
@@ -153,10 +154,15 @@ static int luaB_corunning(lua_State* L)
 
 
 static const luaL_Reg co_funcs[] = {
-    {"create", luaB_cocreate},       {"resume", luaB_coresume},
-    {"running", luaB_corunning},     {"status", luaB_costatus},
-    {"wrap", luaB_cowrap},           {"yield", luaB_yield},
-    {"isyieldable", luaB_yieldable}, {NULL, NULL}};
+    { "create", luaB_cocreate },
+    { "resume", luaB_coresume },
+    { "running", luaB_corunning },
+    { "status", luaB_costatus },
+    { "wrap", luaB_cowrap },
+    { "yield", luaB_yield },
+    { "isyieldable", luaB_yieldable },
+    { NULL, NULL }
+};
 
 
 LUAMOD_API int luaopen_coroutine(lua_State* L)

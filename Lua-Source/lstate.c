@@ -25,11 +25,11 @@
 
 
 #if !defined(LUAI_GCPAUSE)
-    #define LUAI_GCPAUSE 200 /* 200% */
+#    define LUAI_GCPAUSE 200 /* 200% */
 #endif
 
 #if !defined(LUAI_GCMUL)
-    #define LUAI_GCMUL 200 /* GC runs 'twice the speed' of memory allocation */
+#    define LUAI_GCMUL 200 /* GC runs 'twice the speed' of memory allocation */
 #endif
 
 
@@ -38,8 +38,8 @@
 ** created; the seed is used to randomize hashes.
 */
 #if !defined(luai_makeseed)
-    #include <time.h>
-    #define luai_makeseed() cast(unsigned int, time(NULL))
+#    include <time.h>
+#    define luai_makeseed() cast(unsigned int, time(NULL))
 #endif
 
 
@@ -48,7 +48,7 @@
 */
 typedef struct LX
 {
-    lu_byte extra_[LUA_EXTRASPACE];
+    lu_byte   extra_[LUA_EXTRASPACE];
     lua_State l;
 } LX;
 
@@ -58,7 +58,7 @@ typedef struct LX
 */
 typedef struct LG
 {
-    LX l;
+    LX           l;
     global_State g;
 } LG;
 
@@ -79,9 +79,9 @@ typedef struct LG
 
 static unsigned int makeseed(lua_State* L)
 {
-    char buff[4 * sizeof(size_t)];
+    char         buff[4 * sizeof(size_t)];
     unsigned int h = luai_makeseed();
-    int p          = 0;
+    int          p = 0;
     addbuff(buff, p, L);              /* heap variable */
     addbuff(buff, p, &h);             /* local variable */
     addbuff(buff, p, luaO_nilobject); /* global variable */
@@ -153,7 +153,7 @@ void luaE_shrinkCI(lua_State* L)
 
 static void stack_init(lua_State* L1, lua_State* L)
 {
-    int i;
+    int       i;
     CallInfo* ci;
     /* initialize stack array */
     L1->stack     = luaM_newvector(L, BASIC_STACK_SIZE, TValue);
@@ -263,7 +263,7 @@ static void close_state(lua_State* L)
 LUA_API lua_State* lua_newthread(lua_State* L)
 {
     global_State* g = G(L);
-    lua_State* L1;
+    lua_State*    L1;
     lua_lock(L);
     luaC_checkGC(L);
     /* create new thread */
@@ -303,10 +303,10 @@ void luaE_freethread(lua_State* L, lua_State* L1)
 
 LUA_API lua_State* lua_newstate(lua_Alloc f, void* ud)
 {
-    int i;
-    lua_State* L;
+    int           i;
+    lua_State*    L;
     global_State* g;
-    LG* l = cast(LG*, (*f)(ud, NULL, LUA_TTHREAD, sizeof(LG)));
+    LG*           l = cast(LG*, (*f)(ud, NULL, LUA_TTHREAD, sizeof(LG)));
     if (l == NULL) return NULL;
     L               = &l->l.l;
     g               = &l->g;

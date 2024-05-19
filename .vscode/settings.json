@@ -11,6 +11,7 @@
     },
     "files.associations": {
         "lobject.h": "c",
-        "lzio.h": "c"
+        "lzio.h": "c",
+        "lua.h": "c"
     }
 }

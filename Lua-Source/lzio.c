@@ -18,8 +18,8 @@
 
 int luaZ_fill(ZIO* z)
 {
-    size_t size;
-    lua_State* L = z->L;
+    size_t      size;
+    lua_State*  L = z->L;
     const char* buff;
     lua_unlock(L);
     buff = z->reader(L, z->data, &size);

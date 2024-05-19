@@ -21,14 +21,14 @@
 
 
 #if !defined(luai_verifycode)
-    #define luai_verifycode(L, b, f) /* empty */
+#    define luai_verifycode(L, b, f) /* empty */
 #endif
 
 
 typedef struct
 {
-    lua_State* L;
-    ZIO* Z;
+    lua_State*  L;
+    ZIO*        Z;
     const char* name;
 } LoadState;
 
@@ -89,16 +89,18 @@ static lua_Integer LoadInteger(LoadState* S)
 
 static TString* LoadString(LoadState* S, Proto* p)
 {
-    lua_State* L = S->L;
-    size_t size  = LoadByte(S);
-    TString* ts;
+    lua_State* L    = S->L;
+    size_t     size = LoadByte(S);
+    TString*   ts;
     if (size == 0xFF) LoadVar(S, size);
-    if (size == 0) return NULL;
-    else if (--size <= LUAI_MAXSHORTLEN) { /* short string? */ char buff[LUAI_MAXSHORTLEN];
+    if (size == 0)
+        return NULL;
+    else if (--size <= LUAI_MAXSHORTLEN) { /* short string? */
+        char buff[LUAI_MAXSHORTLEN];
         LoadVector(S, buff, size);
         ts = luaS_newlstr(L, buff, size);
-    }
-    else { /* long string */ ts = luaS_createlngstrobj(L, size);
+    } else { /* long string */
+        ts = luaS_createlngstrobj(L, size);
         setsvalue2s(L, L->top, ts); /* anchor it ('loadVector' can GC) */
         luaD_inctop(L);
         LoadVector(S, getstr(ts), size); /* load directly in final place */
@@ -130,7 +132,7 @@ static void LoadConstants(LoadState* S, Proto* f)
     for (i = 0; i < n; i++) setnilvalue(&f->k[i]);
     for (i = 0; i < n; i++) {
         TValue* o = &f->k[i];
-        int t     = LoadByte(S);
+        int     t = LoadByte(S);
         switch (t) {
         case LUA_TNIL:
             setnilvalue(o);
@@ -225,7 +227,7 @@ static void LoadFunction(LoadState* S, Proto* f, TString* psource)
 
 static void checkliteral(LoadState* S, const char* s, const char* msg)
 {
-    char buff[sizeof(LUA_SIGNATURE) + sizeof(LUAC_DATA)]; /* larger than both */
+    char   buff[sizeof(LUA_SIGNATURE) + sizeof(LUAC_DATA)]; /* larger than both */
     size_t len = strlen(s);
     LoadVector(S, buff, len);
     if (memcmp(s, buff, len) != 0) error(S, msg);
@@ -263,9 +265,12 @@ LClosure* luaU_undump(lua_State* L, ZIO* Z, const char* name)
 {
     LoadState S;
     LClosure* cl;
-    if (*name == '@' || *name == '=') S.name = name + 1;
-    else if (*name == LUA_SIGNATURE[0]) S.name = "binary string";
-    else S.name = name;
+    if (*name == '@' || *name == '=')
+        S.name = name + 1;
+    else if (*name == LUA_SIGNATURE[0])
+        S.name = "binary string";
+    else
+        S.name = name;
     S.L = L;
     S.Z = Z;
     checkHeader(&S);

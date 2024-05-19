@@ -19,9 +19,9 @@ typedef struct
 {
     lua_State* L;
     lua_Writer writer;
-    void* data;
-    int strip;
-    int status;
+    void*      data;
+    int        strip;
+    int        status;
 } DumpState;
 
 
@@ -74,11 +74,13 @@ static void DumpInteger(lua_Integer x, DumpState* D)
 
 static void DumpString(const TString* s, DumpState* D)
 {
-    if (s == NULL) DumpByte(0, D);
+    if (s == NULL)
+        DumpByte(0, D);
     else {
-        size_t size     = tsslen(s) + 1; /* include trailing '\0' */
-        const char* str = getstr(s);
-        if (size < 0xFF) DumpByte(cast_int(size), D);
+        size_t      size = tsslen(s) + 1; /* include trailing '\0' */
+        const char* str  = getstr(s);
+        if (size < 0xFF)
+            DumpByte(cast_int(size), D);
         else {
             DumpByte(0xFF, D);
             DumpVar(size, D);
@@ -171,7 +173,8 @@ static void DumpFunction(const Proto* f, TString* psource, DumpState* D)
 {
     if (D->strip || f->source == psource)
         DumpString(NULL, D); /* no debug info or same source as its parent */
-    else DumpString(f->source, D);
+    else
+        DumpString(f->source, D);
     DumpInt(f->linedefined, D);
     DumpInt(f->lastlinedefined, D);
     DumpByte(f->numparams, D);

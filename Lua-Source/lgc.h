@@ -27,22 +27,22 @@
 
 /* how much to allocate before next GC step */
 #if !defined(GCSTEPSIZE)
-    /* ~100 small strings */
-    #define GCSTEPSIZE (cast_int(100 * sizeof(TString)))
+/* ~100 small strings */
+#    define GCSTEPSIZE (cast_int(100 * sizeof(TString)))
 #endif
 
 
 /*
 ** Possible states of the Garbage Collector
 */
-#define GCSpropagate  0
-#define GCSatomic     1
-#define GCSswpallgc   2
-#define GCSswpfinobj  3
+#define GCSpropagate 0
+#define GCSatomic 1
+#define GCSswpallgc 2
+#define GCSswpfinobj 3
 #define GCSswptobefnz 4
-#define GCSswpend     5
-#define GCScallfin    6
-#define GCSpause      7
+#define GCSswpend 5
+#define GCScallfin 6
+#define GCSpause 7
 
 
 #define issweepphase(g) (GCSswpallgc <= (g)->gcstate && (g)->gcstate <= GCSswpend)
@@ -62,20 +62,20 @@
 /*
 ** some useful bit tricks
 */
-#define resetbits(x, m)  ((x) &= cast(lu_byte, ~(m)))
-#define setbits(x, m)    ((x) |= (m))
-#define testbits(x, m)   ((x) & (m))
-#define bitmask(b)       (1 << (b))
+#define resetbits(x, m) ((x) &= cast(lu_byte, ~(m)))
+#define setbits(x, m) ((x) |= (m))
+#define testbits(x, m) ((x) & (m))
+#define bitmask(b) (1 << (b))
 #define bit2mask(b1, b2) (bitmask(b1) | bitmask(b2))
-#define l_setbit(x, b)   setbits(x, bitmask(b))
-#define resetbit(x, b)   resetbits(x, bitmask(b))
-#define testbit(x, b)    testbits(x, bitmask(b))
+#define l_setbit(x, b) setbits(x, bitmask(b))
+#define resetbit(x, b) resetbits(x, bitmask(b))
+#define testbit(x, b) testbits(x, bitmask(b))
 
 
 /* Layout for bit use in 'marked' field: */
-#define WHITE0BIT    0 /* object is white (type 0) */
-#define WHITE1BIT    1 /* object is white (type 1) */
-#define BLACKBIT     2 /* object is black */
+#define WHITE0BIT 0    /* object is white (type 0) */
+#define WHITE1BIT 1    /* object is white (type 1) */
+#define BLACKBIT 2     /* object is black */
 #define FINALIZEDBIT 3 /* object has been marked for finalization */
 /* bit 7 is currently used by tests (luaL_checkmemory) */
 
@@ -84,16 +84,16 @@
 
 #define iswhite(x) testbits((x)->marked, WHITEBITS)
 #define isblack(x) testbit((x)->marked, BLACKBIT)
-#define isgray(x)  /* neither white nor black */ (!testbits((x)->marked, WHITEBITS | bitmask(BLACKBIT)))
+#define isgray(x) /* neither white nor black */ (!testbits((x)->marked, WHITEBITS | bitmask(BLACKBIT)))
 
 #define tofinalize(x) testbit((x)->marked, FINALIZEDBIT)
 
-#define otherwhite(g)  ((g)->currentwhite ^ WHITEBITS)
+#define otherwhite(g) ((g)->currentwhite ^ WHITEBITS)
 #define isdeadm(ow, m) (!(((m) ^ WHITEBITS) & (ow)))
-#define isdead(g, v)   isdeadm(otherwhite(g), (v)->marked)
+#define isdead(g, v) isdeadm(otherwhite(g), (v)->marked)
 
 #define changewhite(x) ((x)->marked ^= WHITEBITS)
-#define gray2black(x)  l_setbit((x)->marked, BLACKBIT)
+#define gray2black(x) l_setbit((x)->marked, BLACKBIT)
 
 #define luaC_white(g) cast(lu_byte, (g)->currentwhite& WHITEBITS)
 
@@ -132,17 +132,17 @@
 #define luaC_upvalbarrier(L, uv) \
     ((iscollectable((uv)->v) && !upisopen(uv)) ? luaC_upvalbarrier_(L, uv) : cast_void(0))
 
-LUAI_FUNC void luaC_fix(lua_State* L, GCObject* o);
-LUAI_FUNC void luaC_freeallobjects(lua_State* L);
-LUAI_FUNC void luaC_step(lua_State* L);
-LUAI_FUNC void luaC_runtilstate(lua_State* L, int statesmask);
-LUAI_FUNC void luaC_fullgc(lua_State* L, int isemergency);
+LUAI_FUNC void      luaC_fix(lua_State* L, GCObject* o);
+LUAI_FUNC void      luaC_freeallobjects(lua_State* L);
+LUAI_FUNC void      luaC_step(lua_State* L);
+LUAI_FUNC void      luaC_runtilstate(lua_State* L, int statesmask);
+LUAI_FUNC void      luaC_fullgc(lua_State* L, int isemergency);
 LUAI_FUNC GCObject* luaC_newobj(lua_State* L, int tt, size_t sz);
-LUAI_FUNC void luaC_barrier_(lua_State* L, GCObject* o, GCObject* v);
-LUAI_FUNC void luaC_barrierback_(lua_State* L, Table* o);
-LUAI_FUNC void luaC_upvalbarrier_(lua_State* L, UpVal* uv);
-LUAI_FUNC void luaC_checkfinalizer(lua_State* L, GCObject* o, Table* mt);
-LUAI_FUNC void luaC_upvdeccount(lua_State* L, UpVal* uv);
+LUAI_FUNC void      luaC_barrier_(lua_State* L, GCObject* o, GCObject* v);
+LUAI_FUNC void      luaC_barrierback_(lua_State* L, Table* o);
+LUAI_FUNC void      luaC_upvalbarrier_(lua_State* L, UpVal* uv);
+LUAI_FUNC void      luaC_checkfinalizer(lua_State* L, GCObject* o, Table* mt);
+LUAI_FUNC void      luaC_upvdeccount(lua_State* L, UpVal* uv);
 
 
 #endif
