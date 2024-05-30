@@ -13,5 +13,6 @@
         "lobject.h": "c",
         "lzio.h": "c",
         "lua.h": "c"
-    }
+    },
+    "C_Cpp.default.compilerPath": "/Users/steven/clang15.0.7/bin/clang++"
 }
