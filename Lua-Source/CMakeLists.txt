@@ -19,7 +19,11 @@ else()
     list(REMOVE_ITEM LUAC_SRC ${LUAC_EXE})
 endif()
 
-add_definitions(-DLUA_BUILD_AS_DLL)
+if(WIN32)
+    add_definitions(-DLUA_BUILD_AS_DLL)
+else()
+    add_compile_options(-fdeclspec)
+endif()
 
 add_library(lua53 SHARED ${LUALIB_SRC})
 
